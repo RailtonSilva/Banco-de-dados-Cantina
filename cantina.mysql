@@ -1,0 +1,80 @@
+drop database cantina;
+create database cantina;
+use cantina;
+show create database cantina;
+-- 
+CREATE TABLE Tipo_Prod (
+Cod_Tip_pro int not null primary key,
+Des_Tipo varchar (30) not null);
+
+CREATE TABLE Vendas (
+Seq_Venda int not null primary key,
+Data_Vend date not null,
+Val_Tot decimal(10,2) not null, Val_Pago decimal(10,2) not null,
+Qnd_Itens int not null, Cod_Cli int not null,
+Nlv_Rep int, Form_Pag int not null);
+
+CREATE TABLE Produtos (
+Cod_Pro int not null auto_increment primary key, Desc_Pro varchar(30) not null,
+Cod_tipo int not null, Cod_For int not null, Qnd_Prod int not null,
+Uni_Prod char(3) not null, Nlv_Rep int);
+
+CREATE TABLE Fornecedor (
+Cod_For int not null Primary key,
+Nome_For varchar(30) not null,
+Cont_For Varchar(40));
+
+CREATE TABLE Cliente (
+Cod_Cli int not null primary key, Nome_Cli varchar (30) not null,
+Saldo_cli decimal(7,2),Lim_Cli decimal(7,2),Cod_Pat int not null,
+Cod_lot int);
+ 
+ CREATE TABLE Lotacao (
+ Cod_Lot int not null primary key, Nom_Lot varchar(30) not null,
+ Sigla_Lot varchar(10));
+
+ CREATE TABLE Patente (
+Cod_Tipo int not null primary key,
+Nom_Pat varchar(30) not null,
+Sigla_Pat varchar(10) not null);
+
+ CREATE TABLE Itens (
+ Seq_Venda int not null primary key,Cod_Prod int not null,
+ Val_Item decimal(10,2) not null,Qnd_Item int not null);
+
+ CREATE TABLE Pagamentos (
+ Seq_Pagmt int not null primary key,
+ Cod_Cli int not null,Data_Pag date not null,
+ Valor_Pag decimal(10,2) not null);
+ 
+ CREATE TABLE Caixa (
+Data_Caixa date not null primary key,
+Data_Abert date not null,
+Hora_Abert timestamp not null,
+Valor_In_Din decimal(10,2) not null,
+Valor_Fin_Din decimal(10,2) not null,
+Valor_Venda decimal(10,2) not null
+);
+
+-- Adicionar as chaves estrangeiras nas tabelas 
+
+ALTER TABLE Cliente ADD FOREIGN KEY (Cod_pat) REFERENCES Patente(Cod_Tipo);
+ALTER TABLE Cliente ADD FOREIGN KEY (Cod_lot) REFERENCES Lotacao(Cod_Lot);
+ALTER TABLE Produtos ADD FOREIGN KEY (Cod_Tipo)REFERENCES Tipo_Prod(Cod_Tip_Pro);
+ALTER TABLE Produtos ADD FOREIGN KEY (Cod_For) REFERENCES Fornecedor(Cod_For);
+ALTER TABLE Vendas ADD FOREIGN KEY (Cod_Cli) REFERENCES Cliente(Cod_Cli);
+ALTER TABLE Itens ADD FOREIGN KEY (Seq_Venda) REFERENCES Vendas (Seq_venda);
+ALTER TABLE Itens ADD FOREIGN KEY (Cod_Prod) REFERENCES Produtos (Cod_Pro);
+ALTER TABLE Pagamentos ADD FOREIGN KEY (Cod_Cli) REFERENCES Cliente (Cod_Cli);
+
+-- Inserir registros nas tabelas Patentes, Tipo_Prod e Lotacao
+INSERT INTO Patente (Nom_Pat, Sigla_Pat)
+VALUES ('Patente 01','P1'), ('Patente 02', 'P2'), ('Patente 03','P3');
+
+INSERT INTO Tipo_Prod (Desc_Tipo)
+VALUES ('Tipo 1'), ('Tipo 2'), ('Tipo 3');
+
+INSERT INTO Lotacao (Nom_Lot, Sigla_Lot)
+VALUES ('Lotacao 11','L11'), ('Lotacao 12', 'L12'), ('Lotacao 13','L13');
+
+
